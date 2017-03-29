@@ -54,6 +54,9 @@ CONFIG = {
 <% if @log_level %>
     '--log-level=<%= @log_level %>',
 <% end -%>
+<% if @pid_file %>
+    '--pid=<%= @pid_file %>',
+<% end -%>
 <% if @mode != 'django' -%>
     '<%= @appmodule %>',
 <% end -%>

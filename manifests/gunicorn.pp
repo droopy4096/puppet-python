@@ -104,4 +104,31 @@ define python::gunicorn (
     content => template($template),
   }
 
+  
+  if $::systemd {
+    systemd::unit_file { "${name}.service":
+      ensure  => $ensure,
+      content => template('python/gunicorn.service.erb'),
+    }
+  } else {
+    file { "/etc/init.d/${name}":
+      ensure => $ensure,
+      mode   => '0755',
+      owner  => 'root',
+      group  => 'wheel',
+      content => template('python/gunicorn.init.erb')
+    }
+  }
+  if ($ensure == 'present'){
+    $service_ensure='running'
+    $service_enabled=true
+  } else {
+    $service_ensure='stopped'
+    $service_enabled=false
+  }
+  service { $name:
+    ensure => $service_ensure,
+    enable => $service_enabled, 
+  }
+
 }

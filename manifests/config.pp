@@ -25,15 +25,15 @@ class python::config {
     if $python::gunicorn != 'absent' {
       Class['python::install'] -> Python::Gunicorn <| |>
 
-      Python::Gunicorn <| |> ~> Service['gunicorn']
+      # Python::Gunicorn <| |> ~> Service['gunicorn']
 
-      service { 'gunicorn':
-        ensure     => running,
-        enable     => true,
-        hasrestart => true,
-        hasstatus  => false,
-        pattern    => '/usr/bin/gunicorn',
-      }
+      ### service { 'gunicorn':
+      ###   ensure     => running,
+      ###   enable     => true,
+      ###   hasrestart => true,
+      ###   hasstatus  => false,
+      ###   pattern    => '/usr/bin/gunicorn',
+      ### }
     }
   }
 

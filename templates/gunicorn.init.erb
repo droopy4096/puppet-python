@@ -1,0 +1,56 @@
+#!/bin/sh
+
+# /etc/rc.d/init.d/<%= @name %>
+#
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+NAME="<%= @name %>"
+
+start(){
+    echo -n "Starting $NAME services: "
+    if gunicorn -c /etc/gunicorn.d/${NAME} --pid /var/run/gunicorn/${NAME}.pid 
+    then 
+      echo_success
+    else
+      echo_failure
+    fi
+    touch /var/lock/subsys/${NAME}
+}
+
+stop(){
+    echo -n "Shutting down $NAME services: "
+    if killproc -p /var/run/gunicorn/${NAME}.pid
+    then 
+      echo_success
+    else
+      echo_failure
+    fi
+    rm -f /var/lock/subsys/${NAME}
+}
+
+case "$1" in
+  start)
+    start
+  ;;
+  stop)
+    stop
+  ;;
+  status)
+    status -p /var/run/gunicorn/${NAME}.pid
+  ;;
+  restart)
+    stop
+    start
+  ;;
+  reload)
+    echo -n "Reloading $NAME services: "
+    kill -HUP $(cat /var/run/gunicorn/${NAME}.pid)
+  ;;
+  *)
+    echo "Usage: $NAME {start|stop|status|reload|restart"
+    exit 1
+  ;;
+esac
+
