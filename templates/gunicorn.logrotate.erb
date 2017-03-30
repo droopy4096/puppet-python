@@ -1,0 +1,13 @@
+<% if @errorlog -%>
+<%= @errorlog %>
+<% end -%>
+<% if @accesslog -%>
+<%= @accesslog %>
+<% end -%>
+{   
+    missingok
+    sharedscripts
+    postrotate
+      /bin/kill -USR1 `cat /var/run/gunicorn/<%= @name %>.pid 2> /dev/null` 2> /dev/null || true
+    endscript
+}

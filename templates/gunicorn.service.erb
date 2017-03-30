@@ -6,9 +6,9 @@ After=network.target
 PIDFile=/run/gunicorn/<%= @name %>
 User=<% @owner %>
 Group=<%= @group %>
-RuntimeDirectory=<%= @dir %>
+RuntimeDirectory=/var/run/gunicorn
 WorkingDirectory=<%= @dir %>
-ExecStart=/usr/bin/gunicorn -c /etc/gunicorn.d/<%= @name %> --pid /var/run/gunicorn/<%= @name %> 
+ExecStart=/usr/bin/gunicorn -c /etc/gunicorn.d/<%= @name %> --pid /var/run/gunicorn/<%= @name %>.pid --bind <%= @bind %> <%= @appmodule %>
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 PrivateTmp=true

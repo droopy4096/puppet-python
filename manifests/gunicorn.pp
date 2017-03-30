@@ -104,6 +104,13 @@ define python::gunicorn (
     content => template($template),
   }
 
+  file { "/etc/logrotate.d/${name}":
+    ensure  => $ensure,
+    mode    => '0644',
+    owner   => 'root',
+    group   => 'root',
+    content => template('python/gunicorn.logrotate.erb'),
+  }
   
   if $::systemd {
     systemd::unit_file { "${name}.service":
